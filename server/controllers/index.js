@@ -39,7 +39,8 @@ class Controller {
       let condition = {
         where: {
           UserId: req.user.id
-        }
+        },
+        include: Country
       };
       let reports = await Report.findAll(condition);
       res.status(200).json(reports);
@@ -62,10 +63,10 @@ class Controller {
           UserId: req.user.id
         };
         let inputUpdate = {
-          cases: res.body.report
+          cases: Number(foundCountry.cases) + Number(req.body.cases)
         };
         let created = await Report.create(input);
-        let updated = await Country.updated(inputUpdate, conditionCountry);
+        let updated = await Country.update(inputUpdate, conditionCountry);
         let condition = {
           where: {
             id: created.id
@@ -90,14 +91,26 @@ class Controller {
       };
       let foundReport = await Report.findOne(condition);
       if (foundReport) {
+        let conditionCountry = {
+          where: {
+            id: foundReport.CountryId
+          }
+        };
+        let country = await Country.findOne(conditionCountry);
+        let updateCountry = {
+          cases: Number(country.cases) - Number(foundReport.cases)
+        };
+        let updated = await Country.update(updateCountry, conditionCountry);
         let deleted = await Report.destroy(condition);
+        let finalCountry = await Country.findOne(conditionCountry);
         res
           .status(200)
-          .json({ country: foundReport, report: "Successfully delete." });
+          .json({ country: finalCountry, report: "Successfully delete." });
       } else {
         throw createError(404);
       }
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }

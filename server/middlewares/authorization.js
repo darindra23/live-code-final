@@ -9,7 +9,6 @@ module.exports = {
           id: req.params.id
         }
       };
-      console.log(req.params.id);
       let foundReport = await Report.findOne(condition);
       if (foundReport) {
         if (foundReport.UserId === req.user.id) {
