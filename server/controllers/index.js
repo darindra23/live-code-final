@@ -51,7 +51,7 @@ class Controller {
     try {
       let conditionCountry = {
         where: {
-          id: Number(req.body.CountryId)
+          id: req.body.CountryId
         }
       };
       let foundCountry = await Country.findOne(conditionCountry);
