@@ -64,7 +64,7 @@ export default {
                 icon: "success",
                 title: "Reports deleted successfully"
               });
-              this.$store.dispatch("fetchReports");
+              this.$store.dispatch("fetchReport");
             })
             .catch(err => {
               errorHandler(err);
